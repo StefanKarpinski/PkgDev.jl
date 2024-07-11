@@ -191,7 +191,7 @@ function tag_internal(
         pkg_toml_content["version"] = version_to_be_tagged
 
         open(pkg_project_toml_path, "w") do f
-            TOML.print(TOML_print_conversion, f, pkg_toml_content)
+            TOML.print(TOML_print_conversion, f, pkg_toml_content; sorted=true, by=key -> ifelse(key=="julia", "1", "0$key"))
         end
 
         project_as_it_should_be_tagged = Pkg.Types.read_project(pkg_project_toml_path)
@@ -208,7 +208,7 @@ function tag_internal(
         pkg_toml_content["version"] = next_version
 
         open(pkg_project_toml_path, "w") do f
-            TOML.print(TOML_print_conversion, f, pkg_toml_content)
+            TOML.print(TOML_print_conversion, f, pkg_toml_content; sorted=true, by=key -> ifelse(key=="julia", "1", "0$key"))
         end
 
         LibGit2.add!(pkg_repo, splitdir(pkg_project_toml_path)[2])
